@@ -16,6 +16,14 @@
     <build>
         <pluginManagement>
             <plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.22.1</version>
+					<configuration>
+						<useSystemClassLoader>false</useSystemClassLoader>
+					</configuration>
+				</plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -43,7 +51,7 @@
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>5.1.6</version>
+            <version>5.1.44</version>
         </dependency>
 
         <dependency>
@@ -69,5 +77,24 @@
             <artifactId>ibatis-sqlmap</artifactId>
             <version>2.3.4.726</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.8.1</version>
+        </dependency>
+		
+		<dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+            <version>4.2.6.Final</version>
+        </dependency>
+		
+		<dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
+            <version>1.0.1.Final</version>
+        </dependency>
+
     </dependencies>
 </project>

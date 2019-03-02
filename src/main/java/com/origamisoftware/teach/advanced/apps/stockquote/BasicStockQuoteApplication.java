@@ -4,7 +4,7 @@ import com.origamisoftware.teach.advanced.model.StockQuery;
 import com.origamisoftware.teach.advanced.model.StockQuote;
 import com.origamisoftware.teach.advanced.services.StockService;
 import com.origamisoftware.teach.advanced.services.StockServiceException;
-import com.origamisoftware.teach.advanced.services.StockServiceFactory;
+import com.origamisoftware.teach.advanced.services.ServiceFactory;
 import com.origamisoftware.teach.advanced.util.Interval;
 
 import java.text.ParseException;
@@ -128,7 +128,7 @@ public class BasicStockQuoteApplication {
         try {
 
             StockQuery stockQuery = new StockQuery(args[0], args[1], args[2]);
-            StockService stockService = StockServiceFactory.getInstance();
+            StockService stockService = ServiceFactory.getStockServiceInstance();
             BasicStockQuoteApplication basicStockQuoteApplication =
                     new BasicStockQuoteApplication(stockService);
             basicStockQuoteApplication.displayStockQuotes(stockQuery);
