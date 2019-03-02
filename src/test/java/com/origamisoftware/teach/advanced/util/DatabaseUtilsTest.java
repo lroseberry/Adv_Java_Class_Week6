@@ -1,6 +1,7 @@
 package com.origamisoftware.teach.advanced.util;
 
 import org.junit.Test;
+import org.hibernate.SessionFactory;
 
 import java.sql.Connection;
 import java.sql.Statement;
@@ -12,6 +13,12 @@ import static org.junit.Assert.assertTrue;
  *  Tests for the DatabaseUtils class
  */
 public class DatabaseUtilsTest {
+	
+	@Test
+    public void testGetSessionFactory() throws Exception {
+        SessionFactory sessionFactory = DatabaseUtils.getSessionFactory();
+        assertNotNull("able to get session factory", sessionFactory);
+    }
 
     @Test
     public void testGoodInitFile() throws Exception {
@@ -20,13 +27,13 @@ public class DatabaseUtilsTest {
 
     @Test(expected = DatabaseInitializationException.class)
     public void testBadInitFile() throws Exception {
-        DatabaseUtils.initializeDatabase("bogus");
+        DatabaseUtils.initializeDatabase("  ");
     }
 
     @Test
     public void testGetConnection() throws Exception{
         Connection connection = DatabaseUtils.getConnection();
-        assertNotNull("verify that we can get a connection ok",connection);
+        assertNotNull("Connection made",connection);
     }
 
     @Test
