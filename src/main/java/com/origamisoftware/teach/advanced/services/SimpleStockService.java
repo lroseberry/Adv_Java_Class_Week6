@@ -53,4 +53,8 @@ import java.util.List;
         }
         return stockQuotes;
     }
+    @Override
+    public void addQuote(String xmlInstance) throws DuplicateQuoteException, StockServiceException {
+
+    }
 }

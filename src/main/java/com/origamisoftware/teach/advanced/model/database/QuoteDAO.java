@@ -1,5 +1,7 @@
 package com.origamisoftware.teach.advanced.model.database;
 
+import com.origamisoftware.teach.advanced.xml.Stocks;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -5,13 +5,25 @@ import com.origamisoftware.teach.advanced.model.database.QuoteDAO;
 import com.origamisoftware.teach.advanced.model.database.StockSymbolDAO;
 import com.origamisoftware.teach.advanced.util.DatabaseUtils;
 import com.origamisoftware.teach.advanced.util.Interval;
+import com.origamisoftware.teach.advanced.util.InvalidXMLException;
+import com.origamisoftware.teach.advanced.util.XMLUtils;
+import com.origamisoftware.teach.advanced.xml.Stocks;
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import java.io.StringReader;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -109,6 +121,7 @@ class DatabaseStockService implements StockService {
             }
         }
 
+
         /**
          SimpleDateFormat simpleDateFormat = new SimpleDateFormat(StockData.dateFormat);
 
@@ -198,5 +211,67 @@ class DatabaseStockService implements StockService {
         startDatePlusInterval.setTime(startDate);
         startDatePlusInterval.add(Calendar.MINUTE, interval.getMinutes());
         return endDate.after(startDatePlusInterval.getTime());
+    }
+    /**
+     * Add a quote to the system.
+     *
+     * @throws com.origamisoftware.teach.advanced.services.UserServiceException       if there is a problem creating the person record.
+     * @throws com.origamisoftware.teach.advanced.services.DuplicateUserNameException if the user name is not unique.
+     */
+    @Override
+    public void addQuote(String xmlInstance) throws DuplicateQuoteException, StockServiceException, ParseException, InvalidXMLException {
+
+        Stocks stocks = null;
+        try {
+            stocks = XMLUtils.unmarshall(xmlInstance, Stocks.class);
+        } catch (InvalidXMLException e) {
+            System.out.println("Invalid XML!");
+            System.exit(-1);
+        }
+        Transaction transaction = null;
+        Session session = null;
+
+        List<Stocks.Stock> stockList = stocks.getStock();
+        Stocks.Stock stock = null;
+        StockSymbolDAO stockSymbolDAO = null;
+
+        for (int index = 0; index<stockList.size(); index++) {
+            stock = stockList.get(index);
+            BigDecimal price = new BigDecimal(stock.getPrice());
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+            Date parsedTimeStamp = dateFormat.parse(stock.getTime());
+            Timestamp timestamp = new Timestamp(parsedTimeStamp.getTime());
+            String symbol = stock.getSymbol();
+            // Couldn't get below line to work!  When uncommented it I was getting an error stating:
+            // A not-null property references a null or transient value:
+            // com.oragamisoftware.teach.advanced.model.database.QuoteDAO.stockSymbolBySymbolId
+            //stockSymbolDAO = DatabaseUtils.findUniqueResultBy("symbol", symbol, StockSymbolDAO.class, true);
+            stockSymbolDAO.setId(1);
+            try {
+                session = DatabaseUtils.getSessionFactory().openSession();
+                transaction = session.beginTransaction();
+                QuoteDAO quoteDAO = new QuoteDAO();
+                quoteDAO.setPrice(price);
+                quoteDAO.setTime(timestamp);
+                quoteDAO.setStockSymbolBySymbolId(stockSymbolDAO);
+                session.saveOrUpdate(quoteDAO);
+                transaction.commit();
+            } catch (ConstraintViolationException e) {
+                throw new DuplicateQuoteException(stock.getSymbol() + " already exists");
+            } catch (HibernateException e) {
+                if (transaction != null && transaction.isActive()) {
+                    transaction.rollback();  // close transaction
+                }
+                throw new StockServiceException(e.getMessage(), e);
+            } finally {
+                if (transaction != null && transaction.isActive()) {
+                 // if we get there there's an error to deal with
+                   transaction.rollback();  //  close transaction
+                }
+                if (session != null) {
+                    session.close();
+                }
+            }
+        }
     }
 }
