@@ -1,15 +1,7 @@
 package com.origamisoftware.teach.advanced.services;
 
-import com.origamisoftware.teach.advanced.model.StockQuote;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-
 /**
- * A factory that returns a <CODE>StockService</CODE> instance.
+ * A factory that returns a Services.
  */
 public class ServiceFactory {
 
@@ -22,15 +14,15 @@ public class ServiceFactory {
      *
      * @return get a <CODE>StockService</CODE> instance
      */
-    public static StockService getStockServiceInstance() {
-        return new DatabaseStockService(); 
-        }
-		
-	/**
+    public static StockService getStockService() {
+        return new DatabaseStockService();
+    }
+
+    /**
      *
-     * @return get a <CODE>StockService</CODE> instance
+     * @return get a <CODE>UserService</CODE> instance
      */
-    public static PersonService getPersonServiceInstance() {
-        return new DatabasePersonService(); 
-        }
+    public static  UserService getUserService() {
+        return new DatabaseUserService();
+    }
 }

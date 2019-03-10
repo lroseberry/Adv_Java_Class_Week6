@@ -9,18 +9,18 @@
         <!-- HibernateUtils class.  Applications should place this file in  -->
         <!-- the root of their class path with appropriate production values. -->
 
-        <!-- Tug database connection URL and credentials -->
-        <property name="connection.url">jdbc:mysql://localhost:3306/stocks?useSSL=false</property>
+        <property name="connection.url">jdbc:mysql://localhost:3306/stocks</property>
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+
         <property name="hibernate.connection.username">monty</property>
         <property name="hibernate.connection.password">some_pass</property>
-        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect
-        </property>
 
-        <mapping class="com.origamisoftware.teach.advanced.model.Person"/>
-        <mapping class="com.origamisoftware.teach.advanced.model.Stock"/>
-        <mapping class="com.origamisoftware.teach.advanced.model.StockQuote"/>
-        <mapping class="com.origamisoftware.teach.advanced.model.PersonStock"/>
+        <mapping class="com.origamisoftware.teach.advanced.model.database.PersonDAO"/>
+        <mapping class="com.origamisoftware.teach.advanced.model.database.PersonStocksDAO"/>
+        <mapping class="com.origamisoftware.teach.advanced.model.database.QuoteDAO"/>
+        <mapping class="com.origamisoftware.teach.advanced.model.database.StockSymbolDAO"/>
+
 
     </session-factory>
 </hibernate-configuration>
