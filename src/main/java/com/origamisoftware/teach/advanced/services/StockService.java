@@ -2,7 +2,11 @@ package com.origamisoftware.teach.advanced.services;
 
 import com.origamisoftware.teach.advanced.model.StockQuote;
 import com.origamisoftware.teach.advanced.util.Interval;
+import com.origamisoftware.teach.advanced.util.InvalidXMLException;
+import com.origamisoftware.teach.advanced.xml.Stocks;
 
+import javax.xml.bind.JAXBException;
+import java.text.ParseException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -38,5 +42,6 @@ public interface StockService {
      */
     List<StockQuote> getQuote(String symbol, Calendar from, Calendar until, Interval interval) throws StockServiceException;
 
+    public void addQuote(String xmlInstance) throws DuplicateQuoteException, StockServiceException, ParseException, InvalidXMLException;
 }
 
